@@ -1,9 +1,14 @@
 {
   "users": [
     {
-      "email": "matheus@gmail.com",
-      "password": "ja1ja2ja3",
+      "email": "teste@email.com",
+      "password": "$2a$10$WT4D5JZM5Db6YWyBi5ilpO/3ZoXYsIgVRUDFqidpozAsAw2k9wTUG",
       "id": 1
+    },
+    {
+      "email": "teste@teste",
+      "password": "$2a$10$QM4MTSvKD0lQ.d4JZAOEH.ih2BSP8MKtqdcjPCVLgmhmDaopP.5BC",
+      "id": 2
     }
   ],
   "learnhttp": {

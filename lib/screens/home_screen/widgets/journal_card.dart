@@ -1,9 +1,14 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_webapi_first_course/helpers/weekday.dart';
 import 'package:flutter_webapi_first_course/models/journal.dart';
 import 'package:flutter_webapi_first_course/screens/commom/confirmation_dialog.dart';
 import 'package:flutter_webapi_first_course/services/journal_service.dart';
 import 'package:uuid/uuid.dart';
+
+import '../../../helpers/logout.dart';
+import '../../commom/exception_dialog.dart';
 
 class JournalCard extends StatelessWidget {
   final Journal? journal;
@@ -139,7 +144,6 @@ class JournalCard extends StatelessWidget {
         ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(content: Text("Registro feito com sucesso")));
       }
-      ;
     });
   }
 
@@ -151,23 +155,36 @@ class JournalCard extends StatelessWidget {
         content:
             "Deseja realmente remover o diário do dia ${WeekDay(journal!.createdAt)}?",
         affirmativeOption: "Remover",
-      ).then((value) {
-        if (value != null) {
-          if (value) {
-            service.delete(journal!.id, token).then((value) => {
-                  if (value)
-                    {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text("Removido com sucesso"),
+      ).then(
+        (value) {
+          if (value != null) {
+            if (value) {
+              service.delete(journal!.id, token).then((value) => {
+                    if (value)
+                      {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text("Removido com sucesso"),
+                          ),
                         ),
-                      ),
-                      refreshFunction()
-                    }
-                });
+                        refreshFunction()
+                      }
+                  });
+            }
           }
-        }
-      });
+        },
+      ).catchError(
+            (error) {
+          logout(context);
+        },
+        test: (error) => error is TokenNotValidException,
+      ).catchError(
+            (error) {
+          var innerError = error as HttpException;
+          showExceptionDialog(context, content: innerError.message);
+        },
+        test: (error) => error is HttpException,
+      );
     }
   }
 }

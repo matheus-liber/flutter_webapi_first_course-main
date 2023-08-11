@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 import '../../../models/journal.dart';
 import 'journal_card.dart';
 
